@@ -11,7 +11,7 @@ Une application web Kanban inspirée de Trello, développée avec React et Vite 
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Zustand](https://img.shields.io/badge/Zustand-4.4-000000?logo=react&logoColor=white)](https://github.com/pmndrs/zustand)
 
-[Démo en ligne](#-déploiement) • [Installation](#-installation) • [Fonctionnalités](#-fonctionnalités)
+[Installation](#-installation) • [Fonctionnalités](#-fonctionnalités) • [Utilisation](#-utilisation)
 
 </div>
 
@@ -193,59 +193,6 @@ EpiTrello/
 1. Cliquez sur **"🔄 Réinitialiser"** en haut à droite
 2. Confirmez l'action
 3. Le tableau revient à son état initial
-
----
-
-## 🌐 Déploiement
-
-### Déployer sur Vercel
-
-1. **Créer un compte sur [Vercel](https://vercel.com)**
-
-2. **Installer Vercel CLI**
-
-```bash
-npm install -g vercel
-```
-
-3. **Déployer**
-
-```bash
-npm run build
-vercel
-```
-
-4. **Suivre les instructions** et votre application sera en ligne en quelques secondes !
-
-### Déployer sur Netlify
-
-1. **Créer un compte sur [Netlify](https://netlify.com)**
-
-2. **Installer Netlify CLI**
-
-```bash
-npm install -g netlify-cli
-```
-
-3. **Build et déploiement**
-
-```bash
-npm run build
-netlify deploy --prod
-```
-
-### Configuration pour le déploiement
-
-Créez un fichier `vercel.json` à la racine :
-
-```json
-{
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install"
-}
-```
 
 ---
 
