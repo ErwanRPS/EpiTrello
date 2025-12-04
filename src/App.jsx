@@ -1,20 +1,32 @@
-import Board from './pages/Board'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import BoardPage from './pages/BoardPage'
+import PrivateRoute from './components/PrivateRoute'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <span className="text-primary-600">📋</span>
-            EpiTrello
-          </h1>
-        </div>
-      </header>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Board />
-      </main>
-    </div>
+    <Router>
+      <Routes>
+        {/* Routes publiques */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Routes protégées */}
+        <Route
+          path="/board"
+          element={
+            <PrivateRoute>
+              <BoardPage />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Redirection par défaut */}
+        <Route path="/" element={<Navigate to="/board" replace />} />
+        <Route path="*" element={<Navigate to="/board" replace />} />
+      </Routes>
+    </Router>
   )
 }
 
