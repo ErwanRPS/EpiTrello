@@ -18,8 +18,10 @@ import useBoardStore from '../store/useBoardStore'
  * Gère le drag & drop et affiche toutes les colonnes
  */
 const Board = () => {
-  const { columns, cards, columnOrder, reorderCards, resetBoard } = useBoardStore()
+  const { columns, cards, columnOrder, reorderCards, resetBoard, addColumn, deleteColumn } = useBoardStore()
   const [activeId, setActiveId] = useState(null)
+  const [isAddingColumn, setIsAddingColumn] = useState(false)
+  const [newColumnTitle, setNewColumnTitle] = useState('')
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -114,15 +116,33 @@ const Board = () => {
     }
   }
 
+  // Ajouter une nouvelle colonne
+  const handleAddColumn = () => {
+    if (newColumnTitle.trim()) {
+      addColumn(newColumnTitle)
+      setNewColumnTitle('')
+      setIsAddingColumn(false)
+    }
+  }
+
+  // Supprimer une colonne
+  const handleDeleteColumn = (columnId) => {
+    const column = columns[columnId]
+    const message = column.cardIds.length > 0
+      ? `La colonne "${column.title}" contient ${column.cardIds.length} carte(s). Voulez-vous vraiment la supprimer ?`
+      : `Supprimer la colonne "${column.title}" ?`
+    
+    if (window.confirm(message)) {
+      deleteColumn(columnId)
+    }
+  }
+
   return (
     <div>
       {/* Barre d'actions */}
       <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl font-semibold text-gray-800">Mon Tableau Kanban</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            👆 Clique et maintiens une carte, puis déplace-la vers une autre colonne
-          </p>
         </div>
         <button
           onClick={handleReset}
@@ -145,8 +165,55 @@ const Board = () => {
             const column = columns[columnId]
             const columnCards = column.cardIds.map(cardId => cards[cardId]).filter(Boolean)
 
-            return <Column key={column.id} column={column} cards={columnCards} />
+            return (
+              <Column 
+                key={column.id} 
+                column={column} 
+                cards={columnCards}
+                onDelete={() => handleDeleteColumn(columnId)}
+              />
+            )
           })}
+
+          {/* Bouton pour ajouter une colonne */}
+          {isAddingColumn ? (
+            <div className="bg-gray-100 rounded-lg p-4 w-full sm:w-80 flex-shrink-0">
+              <input
+                type="text"
+                value={newColumnTitle}
+                onChange={e => setNewColumnTitle(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && handleAddColumn()}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm mb-3"
+                placeholder="Nom de la colonne"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddColumn}
+                  className="flex-1 px-3 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-sm font-medium transition-colors"
+                >
+                  Ajouter
+                </button>
+                <button
+                  onClick={() => {
+                    setIsAddingColumn(false)
+                    setNewColumnTitle('')
+                  }}
+                  className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium transition-colors"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsAddingColumn(true)}
+              className="bg-gray-100 hover:bg-gray-200 rounded-lg p-4 w-full sm:w-80 flex-shrink-0 text-gray-600 font-medium transition-colors flex items-center justify-center gap-2"
+            >
+              <span className="text-lg">+</span>
+              Ajouter une colonne
+            </button>
+          )}
         </div>
 
         <DragOverlay>
